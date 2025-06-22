@@ -5,7 +5,8 @@ export async function POST(req: NextRequest) {
     const { itemId } = await req.json();
     if (!itemId) return NextResponse.json({ error: "Item ID required" }, { status: 400 });
 
-    const username = new URL(req.url).pathname.split("/").at(-2);
+    const segments = new URL(req.url).pathname.split("/");
+    const username = segments[segments.indexOf("user") + 1];
 
     const user = await prisma.user.findUnique({ where: { username: username } });
     const item = await prisma.item.findUnique({ where: { id: itemId } });
