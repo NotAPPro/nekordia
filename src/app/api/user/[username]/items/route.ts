@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-export async function POST(req: NextRequest, { params }: { params: { username: string } }) {
+export async function POST(req: NextRequest) {
     const { itemId } = await req.json();
     if (!itemId) return NextResponse.json({ error: "Item ID required" }, { status: 400 });
 
-    const user = await prisma.user.findUnique({ where: { username: params.username } });
+    const username = new URL(req.url).pathname.split("/").at(-2);
+
+    const user = await prisma.user.findUnique({ where: { username: username } });
     const item = await prisma.item.findUnique({ where: { id: itemId } });
 
     if (!user || !item) return NextResponse.json({ error: "User or item not found" }, { status: 404 });
