@@ -1,6 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
+// アイテム一覧を取得
+export async function GET() {
+    const items = await prisma.item.findMany();
+
+    const headers = {
+        "Access-Control-Allow-Origin": "*",
+    };
+
+    return NextResponse.json(items, {
+        headers,
+    });
+}
+
 export async function POST(req: NextRequest) {
     const { itemId } = await req.json();
     if (!itemId) return NextResponse.json({ error: "Item ID required" }, { status: 400 });
