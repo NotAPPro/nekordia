@@ -1,0 +1,36 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model User {
+    id        String     @id @default(cuid())
+    username  String     @unique
+    nek       Int        @default(0)
+    items     UserItem[]
+    createdAt DateTime   @default(now())
+    updateAt  DateTime   @updatedAt
+}
+
+model Item {
+    id          String   @id @default(cuid())
+    name        String
+    description String?
+    price       Int
+    users       UserItem[]
+}
+
+model UserItem {
+    id     String @id @default(cuid())
+    user   User   @relation(fields: [userId], references: [id])
+    userId String
+    item   Item   @relation(fields: [itemId], references: [id])
+    itemId String
+    count  Int    @default(1)
+
+    @@unique([userId, itemId]) // 重複購入防止
+}
