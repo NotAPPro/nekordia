@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { registerItem, getItems } from "./actions";
 
 export default function AdminItemsPage() {
@@ -65,12 +65,12 @@ export default function AdminItemsPage() {
             <h2 className="font-bold">📦 登録済みアイテム一覧</h2>
             <ul className="mt-2 space-y-1">
                 {items.map(item => (
-                    <>
+                    <Fragment key={item.name}>
                         <li key={item.name}>
                             {item.name} - {item.price}Nek
                         </li>
                         <small className="text-gray-500">{item.description || "説明なし"}</small>
-                    </>
+                    </Fragment>
                 ))}
             </ul>
         </div>
